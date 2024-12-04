@@ -1,10 +1,8 @@
-import ProductManager from "../services/ProductManager";
-
+import ProductManager from '../services/ProductManager.js'; 
+import { io } from '../app.js';
 
 const productManager = new ProductManager()
 const productRouter = express.Router();
-
-
 
 productRouter.get('/', (req, res) => {
     const limit = parseInt(req.query.limit) || null;
@@ -23,6 +21,10 @@ productRouter.get('/:pid', (req, res) => {
 productRouter.post('/', async (req, res) => {
     const { title, description, code, price, stock, category } = req.body;
     const newProduct = await productManager.addProduct({ title, description, code, price, stock, category });
+    
+    
+    io.emit('updateProducts', productManager.getProducts());
+
     res.status(201).json(newProduct);
 });
 
@@ -40,6 +42,10 @@ productRouter.put('/:pid', async (req, res) => {
 productRouter.delete('/:pid', async (req, res) => {
     try {
         const deletedProduct = await productManager.deleteProduct(Number(req.params.pid));
+        
+        
+        io.emit('updateProducts', productManager.getProducts());
+
         res.json(deletedProduct);
     } catch (error) {
         res.status(404).json({ error: 'Producto no encontrado' });
