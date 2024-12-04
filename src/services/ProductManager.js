@@ -1,28 +1,33 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { fileURLToPath } from 'url';  
+import { dirname } from 'path';  
 
-const productosFilePath = path.resolve('data', 'productos.json');
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const productosFilePath = path.resolve('data', 'products.json');
 
 export default class ProductManager {
 
     constructor() {
-        this.filePath = path.join(__dirname, 'data', 'productos.json');
-        this.products = []; // Inicializamos vacío
+        this.filePath = path.join(__dirname, 'data', 'productos.json');  
+        this.products = []; 
     }
 
-    // Método asíncrono para cargar los productos
+
     async init() {
         try {
             const data = await fs.readFile(this.filePath, 'utf-8');
-            this.products = JSON.parse(data); // Cargamos los productos
+            this.products = JSON.parse(data); 
         } catch (error) {
             console.log("No se pudo cargar el archivo de productos, inicializando vacío.");
-            this.products = []; // Si falla, inicializamos como vacío
+            this.products = [];
         }
     }
 
-    // Guardar los productos en el archivo
+
     async saveProducts() {
         try {
             await fs.writeFile(this.filePath, JSON.stringify(this.products, null, 2), 'utf-8');
@@ -31,7 +36,7 @@ export default class ProductManager {
         }
     }
 
-    // Obtener todos los productos, con limitación opcional
+
     getProducts(limit = null) {
         if (limit) {
             return this.products.slice(0, limit);
@@ -39,21 +44,20 @@ export default class ProductManager {
         return this.products;
     }
 
-    // Obtener un producto por id
     getProductById(id) {
         return this.products.find(product => product.id === id);
     }
 
-    // Agregar un nuevo producto
+
     async addProduct(product) {
         const id = this.products.length ? Math.max(...this.products.map(p => p.id)) + 1 : 1;
         const newProduct = { id, ...product, status: true };
         this.products.push(newProduct);
-        await this.saveProducts(); // Guardamos después de agregar el producto
+        await this.saveProducts();
         return newProduct;
     }
 
-    // Actualizar un producto
+
     async updateProduct(id, updatedFields) {
         const index = this.products.findIndex(p => p.id === id);
         if (index === -1) throw new Error('Producto no encontrado');
@@ -62,7 +66,6 @@ export default class ProductManager {
         return this.products[index];
     }
 
-    // Eliminar un producto
     async deleteProduct(id) {
         const index = this.products.findIndex(p => p.id === id);
         if (index === -1) throw new Error('Producto no encontrado');
@@ -71,6 +74,7 @@ export default class ProductManager {
         return deletedProduct[0];
     }
 }
+
 
 
 

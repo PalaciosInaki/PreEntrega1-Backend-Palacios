@@ -1,4 +1,5 @@
 import CartManager from "../services/CartManager.js";
+import express from 'express';
 
 
 const cartManager = new CartManager()
@@ -27,9 +28,7 @@ cartRouter.post('/:cid/product/:pid', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
-});
+
 
 
 export default cartRouter;

@@ -1,9 +1,15 @@
-const fs = require('fs').promises;
-const path = require('path');
+import fs from 'fs/promises'; 
+import path from 'path';
+import { fileURLToPath } from 'url';  
+import { dirname } from 'path';  
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default class CartManager {
   constructor() {
-    this.filePath = path.join(__dirname, 'data', 'carrito.json');
+    this.filePath = path.join(__dirname, 'data', 'carts.json');  
     this.carts = [];
   }
 
@@ -31,7 +37,7 @@ export default class CartManager {
   async createCart() {
     const newCart = { id: this.carts.length + 1, products: [] };
     this.carts.push(newCart);
-    await this.saveCarts(); // Guardamos después de agregar el carrito
+    await this.saveCarts(); 
     return newCart;
   }
 
@@ -49,7 +55,7 @@ export default class CartManager {
     if (productIndex === -1) {
       cart.products.push({ product: pid, quantity: 1 });
     } else {
-      cart.products[productIndex].quantity += 1; // Incrementar cantidad si ya existe
+      cart.products[productIndex].quantity += 1; 
     }
     await this.saveCarts();
     return cart;

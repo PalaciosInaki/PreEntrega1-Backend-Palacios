@@ -1,3 +1,4 @@
+import express from 'express';
 import ProductManager from '../services/ProductManager.js'; 
 import { io } from '../app.js';
 
