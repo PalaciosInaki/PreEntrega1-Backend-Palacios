@@ -1,13 +1,10 @@
-import fs from 'fs/promises'; 
-import path from 'path';
-import { fileURLToPath } from 'url';  
-import { dirname } from 'path';  
+const fs = require('fs/promises'); 
+const path = require('path');
+const { fileURLToPath } = require('url');  
+const { dirname } = require('path');  
 
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-export default class CartManager {
+class CartManager {
   constructor() {
     this.filePath = path.join(__dirname, 'data', 'carts.json');  
     this.carts = [];
@@ -61,3 +58,5 @@ export default class CartManager {
     return cart;
   }
 }
+
+module.exports = CartManager;

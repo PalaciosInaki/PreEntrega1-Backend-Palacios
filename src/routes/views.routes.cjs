@@ -1,9 +1,10 @@
-import { Router } from 'express';
-import ProductManager from '../services/ProductManager.js';
+const { Router } = require('express');
+const ProductManager = require('../services/ProductManager.cjs');
 
 const viewsRouter = Router();
 const productManager = new ProductManager();
-await productManager.init(); 
+
+
 
 
 viewsRouter.get('/home', async (req, res) => {
@@ -13,7 +14,7 @@ viewsRouter.get('/home', async (req, res) => {
 
 
 viewsRouter.get('/realtimeproducts', (req, res) => {
-    res.render('realTimeProducts');
+    res.render('index');
 });
 
-export default viewsRouter;
+module.exports = viewsRouter;

@@ -1,15 +1,13 @@
-import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';  
-import { dirname } from 'path';  
+const fs = require('fs/promises');
+const path = require('path');
+const { fileURLToPath } = require('url');  
+const { dirname } = require('path');  
 
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const productosFilePath = path.resolve('data', 'products.json');
 
-export default class ProductManager {
+class ProductManager {
 
     constructor() {
         this.filePath = path.join(__dirname, 'data', 'productos.json');  
@@ -78,5 +76,5 @@ export default class ProductManager {
 
 
 
-
+module.exports = ProductManager;
 
