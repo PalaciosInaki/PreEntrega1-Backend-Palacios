@@ -10,6 +10,15 @@ class CartManager {
         }
     }
 
+    async getCarts() {
+      try {
+          return await cartModel.find().lean(); // Recupera todos los carritos
+      } catch (error) {
+          throw new Error(`Error fetching carts: ${error.message}`);
+      }
+  }
+  
+
     async getCartById(cartId) {
         try {
             return await cartModel.findById(cartId).populate('products.productId').lean();

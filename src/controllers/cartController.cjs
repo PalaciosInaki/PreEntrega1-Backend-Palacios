@@ -9,6 +9,16 @@ const createCart = async (req, res) => {
     }
 };
 
+const getCarts = async (req, res) => {
+    try {
+        const carts = await CartManager.getCarts(); // Método para obtener todos los carritos
+        res.render('cartsList', { carts }); // Renderiza la vista de lista de carritos
+    } catch (error) {
+        res.status(500).render('error', { error: error.message });
+    }
+};
+
+
 const getCartById = async (req, res) => {
     try {
         const cart = await CartManager.getCartById(req.params.id);
@@ -33,6 +43,7 @@ const addProductToCart = async (req, res) => {
 
 module.exports = {
     createCart,
+    getCarts,
     getCartById,
     addProductToCart,
 };
