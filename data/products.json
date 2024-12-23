@@ -1,1 +1,24 @@
-[]
+[{
+    "id": 1,
+    "nombre": "Laptop HP Pavilion",
+    "descripcion": "Laptop de 14 pulgadas con procesador Intel Core i5, 8GB RAM y 512GB SSD.",
+    "precio": 85000,
+    "categoria": "Electrónica",
+    "stock": 10
+  },
+  {
+    "id": 2,
+    "nombre": "Auriculares Sony WH-1000XM4",
+    "descripcion": "Auriculares inalámbricos con cancelación de ruido y 30 horas de batería.",
+    "precio": 35000,
+    "categoria": "Accesorios",
+    "stock": 25
+  },
+  {
+    "id": 3,
+    "nombre": "Smartphone Samsung Galaxy S21",
+    "descripcion": "Pantalla AMOLED de 6.2 pulgadas, 128GB de almacenamiento, cámara de 64MP.",
+    "precio": 120000,
+    "categoria": "Celulares",
+    "stock": 15
+  }]
