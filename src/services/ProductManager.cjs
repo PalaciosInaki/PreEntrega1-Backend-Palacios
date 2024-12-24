@@ -28,7 +28,7 @@ class ProductManager {
 
     async updateProduct(id, productData) {
         try {
-            return await productModel.findByIdAndUpdate(id, productData, { new: true });
+            return await productModel.findByIdAndUpdate(id, productData, { new: true }).lean();
         } catch (error) {
             throw new Error(`Error updating product: ${error.message}`);
         }
@@ -36,7 +36,7 @@ class ProductManager {
 
     async deleteProduct(id) {
         try {
-            return await productModel.findByIdAndDelete(id);
+            return await productModel.findByIdAndDelete(id).lean();
         } catch (error) {
             throw new Error(`Error deleting product: ${error.message}`);
         }
