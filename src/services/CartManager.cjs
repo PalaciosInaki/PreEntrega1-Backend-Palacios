@@ -27,22 +27,26 @@ class CartManager {
         }
     }
 
-    async addProductToCart(cartId, productId, quantity = 1) {
+    async addProductToCart(productId) {
         try {
-            const cart = await cartModel.findById(cartId);
+            let cart = await cartModel.findOne();
             if (!cart) {
-                throw new Error('Cart not found');
+                //si no existe un carrito lo crea
+                cart = new cartModel({ products: [] });
             }
 
-            const productIndex = cart.products.findIndex(p => p.productId.toString() === productId);
+            const existingProduct = cart.products.find((p) => p.product.toString() === productId);
 
-            if (productIndex >= 0) {
-                cart.products[productIndex].quantity += quantity; // Incrementa la cantidad si el producto ya está en el cart
+            if (existingProduct) {
+                //si el producto ya esta incrementa la cantidad
+                existingProduct.quantity += 1;
             } else {
-                cart.products.push({ productId, quantity }); // Agrega un nuevo producto
+                //si no lo agrega
+                cart.products.push({ product: productId });
             }
 
-            return await cart.save();
+            await cart.save();
+            return cart;
         } catch (error) {
             throw new Error(`Error adding product to cart: ${error.message}`);
         }

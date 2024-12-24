@@ -3,7 +3,7 @@ const CartManager = require('../services/CartManager.cjs');
 const createCart = async (req, res) => {
     try {
         const cart = await CartManager.createCart();
-        res.redirect(`/carts/${cart._id}`); // Redirige a la vista del carrito recién creado
+        res.redirect(`/carts/${cart._id}`); 
     } catch (error) {
         res.status(500).render('error', { error: error.message });
     }
@@ -11,8 +11,8 @@ const createCart = async (req, res) => {
 
 const getCarts = async (req, res) => {
     try {
-        const carts = await CartManager.getCarts(); // Método para obtener todos los carritos
-        res.render('cartsList', { carts }); // Renderiza la vista de lista de carritos
+        const carts = await CartManager.getCarts(); 
+        res.render('cartsList', { carts }); 
     } catch (error) {
         res.status(500).render('error', { error: error.message });
     }
@@ -25,17 +25,19 @@ const getCartById = async (req, res) => {
         if (!cart) {
             return res.status(404).render('error', { error: 'Carrito no encontrado' });
         }
-        res.render('cartDetail', { cart }); // Renderiza la vista con los detalles del carrito
+        res.render('cartDetail', { cart }); 
     } catch (error) {
         res.status(500).render('error', { error: error.message });
     }
 };
 
-const addProductToCart = async (req, res) => {
+const addToCart = async (req, res) => {
     try {
-        const { productId, quantity } = req.body;
-        const cart = await CartManager.addProductToCart(req.params.id, productId, quantity);
-        res.redirect(`/carts/${req.params.id}`); // Redirige a la vista del carrito actualizado
+        const { productId } = req.body;
+
+        const cart = await CartManager.addProductToCart(productId);
+
+        res.redirect('/carts');
     } catch (error) {
         res.status(500).render('error', { error: error.message });
     }
@@ -45,5 +47,5 @@ module.exports = {
     createCart,
     getCarts,
     getCartById,
-    addProductToCart,
+    addToCart,
 };

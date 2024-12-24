@@ -34,6 +34,11 @@
                 <a href="/products/{{this._id}}">
                 <button type="button">Ver detalles</button>
                 </a>
+
+                <form action="/carts/add" method="POST" style="display:inline;">
+                    <input type="hidden" name="productId" value="{{this._id}}">
+                    <button type="submit">Agregar al Carrito</button>
+                </form>
             </td>
         </tr>
         {{/each}}

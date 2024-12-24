@@ -1,8 +1,13 @@
-<h1>Lista de Carritos</h1>
+<h1>Carritos</h1>
 <ul>
     {{#each carts}}
-        <li>
-            <a href="/carts/{{this._id}}">Carrito ID: {{this._id}}</a>
-        </li>
+    <li>
+        <h2>Carrito ID: {{this._id}}</h2>
+        <ul>
+            {{#each this.products}}
+            <li>Producto ID: {{this.product}} | Cantidad: {{this.quantity}}</li>
+            {{/each}}
+        </ul>
+    </li>
     {{/each}}
 </ul>
