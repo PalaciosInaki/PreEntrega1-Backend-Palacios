@@ -44,6 +44,8 @@ app.use(session({
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/public', express.static(path.join(__dirname, 'public')));//concateno rutas
+
 
 app.use('/products', productRouter);
 app.use('/carts', cartRouter)
