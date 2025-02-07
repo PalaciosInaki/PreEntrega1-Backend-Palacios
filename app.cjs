@@ -9,6 +9,9 @@ const mongoose = require("mongoose");
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const passport = require('passport');
+const initalizatePassport = require('./src/config/passport.config.cjs');
+
 
 
 const app = express();
@@ -94,3 +97,7 @@ const connectMongoDB= async () => {
 }
 
 connectMongoDB()
+
+initalizatePassport()
+app.use(passport.initialize());
+app.use(passport.session());
