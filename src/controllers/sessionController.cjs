@@ -1,4 +1,5 @@
 const userModel = require('../models/user.model.cjs');
+const { createHashPassword, comparePassword } = require('../utils/bcrypt.cjs');
 
 const login = async (req, res) => {
     const { email, password } = req.body
@@ -9,7 +10,7 @@ const login = async (req, res) => {
     if(!user){
         res.status(404).send("Usuario no encontrado")
     }else{
-        if(user.password === password){
+        if(comparePassword(password, user.password)){
             ///Genero la sesion
             req.session.user = "User"
             req.session.email = user.email
@@ -30,7 +31,15 @@ const register = async (req, res) => {
     const { first_name, last_name, email, age, password } = req.body
 
     try {
-        let message = await userModel.create({ first_name, last_name, email, age, password })
+        const newUser = {
+            first_name,
+            last_name,
+            email,
+            age,
+            password: createHashPassword(password)
+        }
+
+        let message = await userModel.create(newUser)
 
         res.status(201).send("Usuario registrado correctamente: ", message)
     }catch(error){
