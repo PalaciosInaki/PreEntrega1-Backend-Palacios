@@ -14,8 +14,9 @@ const login = async (req, res) => {
             email : req.user.email,
             first_name : req.user.first_name,
         }
+        ///previo a redirect envio la cookie
         res.cookie('jwt', token, { httpOnly: true, secure: false, maxAge: 3600000})
-        
+
         res.status(200).redirect('/products')
         
     } catch (error) {
