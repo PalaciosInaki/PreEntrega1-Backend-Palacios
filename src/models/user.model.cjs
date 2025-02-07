@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
     cart: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'carts', // Relación con la colección de productos
-        required: true, 
+        required: false 
     },
     role: {
         type: String,

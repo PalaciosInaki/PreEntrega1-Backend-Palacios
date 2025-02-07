@@ -1,7 +1,9 @@
 const passport = require('passport');
 const local = require('passport-local').Strategy;
+const GithubStrategy = require('passport-github2').Strategy;
 const { comparePassword, createHashPassword } = require('../utils/bcrypt.cjs');
 const userModel = require('../models/user.model.cjs');
+
 
 const localStrategy = local.Strategy
 
@@ -55,6 +57,35 @@ const initalizatePassport = () => {
 
     }));
 
+
+    passport.use('github', new GithubStrategy({
+        clientID: "Ov23liNYZK3iJlb87laf",
+        clientSecret: "838875aab34663b912aec613b589adeb9cfd8e0c",
+        callbackURL: "http://localhost:8080/sessions/github/callback"
+        
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            const email = profile._json.email || `${profile.username}@github.com`;/////Git hub no proporciona el email, cambie configuraciones y di permisos pero no
+            const user = await userModel.findOne({ email: email })
+            if (!user) {
+                console.log(profile)
+                const newUser = await userModel.create({
+                    first_name: profile._json.name,
+                    last_name : " ", //dato no proporcionado por git
+                    email: email,
+                    password: '12345', //dato no proporcionado por git, se genera por defecto
+                    age: 18 //Dato no proporcionado por git
+                })
+                return done(null, newUser)
+            }
+            return done(null, user)
+
+
+        } catch (error) {
+            return done(error)
+        }
+    }));
+
     /////Pasos necesarios para trabajar via http con passport 
     passport.serializeUser((user, done) => {
         done(null, user._id)
@@ -68,10 +99,6 @@ const initalizatePassport = () => {
             done(error)
         }
     });
-
-
-
-
 
 }
 

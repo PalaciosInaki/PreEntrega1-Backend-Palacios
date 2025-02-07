@@ -10,7 +10,7 @@ const login = async (req, res) => {
             email : req.user.email,
             first_name : req.user.first_name,
         }
-        res.status(200).send("Usuario logueado correctamente")
+        res.status(200).redirect('/products')
         
     } catch (error) {
         res.status(500).send("Error al loguear usuario")
@@ -19,8 +19,6 @@ const login = async (req, res) => {
 
 }
  
-
-
 
 const register = async (req, res) => {
     try {
@@ -35,8 +33,30 @@ const register = async (req, res) => {
     }
 }
 
+const viewLogin = (req, res) => {
+    res.status(200).render('login', {})
+}
 
-module.exports = { login, register };
+
+
+const githubLogin = (req, res) => {
+    try {
+        req.session.user = {
+            email : req.user.email,
+            first_name : req.user.first_name,
+        }
+        res.status(200).redirect('/products')
+        
+    } catch (error) {
+        res.status(500).send("Error al loguear usuario")
+        
+    }
+    
+    
+}
+
+
+module.exports = { login, register, viewLogin, githubLogin};
 
 
 
