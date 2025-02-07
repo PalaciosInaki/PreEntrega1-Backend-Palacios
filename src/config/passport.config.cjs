@@ -3,9 +3,20 @@ const local = require('passport-local').Strategy;
 const GithubStrategy = require('passport-github2').Strategy;
 const { comparePassword, createHashPassword } = require('../utils/bcrypt.cjs');
 const userModel = require('../models/user.model.cjs');
+const jwt = require('passport-jwt');
 
 
 const localStrategy = local.Strategy
+const JWTStrategy = jwt.Strategy
+const ExtractJWT = jwt.ExtractJwt
+
+const cookieExtractor = (req) => {
+    let token = null;
+    if (req && req.cookies) {
+        token = req.cookies['jwt'];
+    }
+    return token;
+}
 
 const initalizatePassport = () => {
 
@@ -85,6 +96,21 @@ const initalizatePassport = () => {
             return done(error)
         }
     }));
+
+
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey: 'jwtSecret'
+
+    }, async (jwt_payload, done) => {
+        try {
+            return done(null, jwt_payload)
+        } catch (e) {
+            return done(e)
+            
+        }
+    }))
+       
 
     /////Pasos necesarios para trabajar via http con passport 
     passport.serializeUser((user, done) => {

@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const cartCollection = 'carts';
 
 const cartSchema = new mongoose.Schema({
-    products: [
-        {
-            product: {
+    products: {
+        type: [{
+            id_product: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'products', // Relación con la colección de productos
                 required: true,
@@ -15,8 +15,13 @@ const cartSchema = new mongoose.Schema({
                 required: true,
                 default: 1,
             },
-        },
-    ],
+        }],
+        default: []
+    },
+});
+
+cartSchema.pre('findOne', function() {
+    this.populate('products.id_product');
 });
 
 const cartModel = mongoose.model(cartCollection, cartSchema);

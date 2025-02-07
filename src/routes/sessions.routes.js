@@ -9,5 +9,6 @@ sessionRouter.post('/register', passport.authenticate('register'), sessionContro
 sessionRouter.get('/viewlogin', sessionController.viewLogin);
 sessionRouter.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => {});
 sessionRouter.get('/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), sessionController.githubLogin);
+sessionRouter.get('current', passport.authenticate('jwt', { session: false }), (req, res) => { res.send(req.user) });
 
 module.exports = sessionRouter;

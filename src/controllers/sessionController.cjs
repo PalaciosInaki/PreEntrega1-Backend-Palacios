@@ -1,15 +1,21 @@
 const userModel = require('../models/user.model.cjs');
 const { createHashPassword, comparePassword } = require('../utils/bcrypt.cjs');
+const generateToken = require('../utils/jwt.cjs');
 
 const login = async (req, res) => {
     try {
         if(!req.user){ //consulta si el usuario no esta logueado
             res.status(401).send("Usuario o contraseña incorrecta")
         }
+
+        const token = generateToken(req.user)
+
         req.session.user = {
             email : req.user.email,
             first_name : req.user.first_name,
         }
+        res.cookie('jwt', token, { httpOnly: true, secure: false, maxAge: 3600000})
+        
         res.status(200).redirect('/products')
         
     } catch (error) {
