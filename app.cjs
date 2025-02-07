@@ -1,14 +1,18 @@
 const express = require('express');
 const productRouter = require('./src/routes/products.routes.js');
 const cartRouter = require('./src/routes/carts.routes.js');
+const sessionRouter = require('./src/routes/sessions.routes.js');
 const exphbs = require('express-handlebars');  
 const { Server: SocketServer } = require('socket.io');
 const path = require('path');
-const router = require('./src/routes/index.routes');
 const mongoose = require("mongoose");
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 
 const app = express();
+const DBPATH = "mongodb+srv://lokitan74138:1LGCC9ryZkanEJ1J@cluster0.cstf4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 
 ////Settings
@@ -22,20 +26,28 @@ app.engine('.hbs', exphbs.engine({
 }))
 app.set('view engine', '.hbs');
 
+
+////Middlewares
 app.use(express.json());
+app.use(cookieParser("cookieSecret"));
+app.use(session({
+    store: MongoStore.create({ mongoUrl: DBPATH , ttl: 60 * 60 * 24 } ),
+    secret: 'sessionSecret',
+    resave: false,
+    saveUninitialized: false, 
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24
+    }
+
+  
+}));
+
 app.use(express.urlencoded({ extended: true }));
 
-///ROUTES 
 
-//app.get('/xd', (req, res) =>{
-  //  res.render('index')
-
-//})
-//
-
-app.use('/', router);
 app.use('/products', productRouter);
 app.use('/carts', cartRouter)
+app.use('/sessions', sessionRouter);
 
 
 
@@ -65,7 +77,8 @@ server.listen(app.get('port'), () => {
 
 
 /// Conexion base de datos
-const DBPATH = "mongodb+srv://lokitan74138:1LGCC9ryZkanEJ1J@cluster0.cstf4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+
 
 const connectMongoDB= async () => {
   try {
