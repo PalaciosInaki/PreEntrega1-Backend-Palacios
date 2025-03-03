@@ -10,7 +10,7 @@ sessionRouter.get('/viewlogin', sessionController.viewLogin);
 sessionRouter.get('/viewregister', sessionController.viewRegister);
 sessionRouter.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => {});
 sessionRouter.get('/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), sessionController.githubLogin);
-sessionRouter.get('/current', passport.authenticate('jwt', { session: false }), authorization('admin'), (req, res) => {
+sessionRouter.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
     res.send(req.user); 
 });
 
