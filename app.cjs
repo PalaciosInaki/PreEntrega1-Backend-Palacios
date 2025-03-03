@@ -1,3 +1,4 @@
+const dotenv = require('dotenv');
 const express = require('express');
 const productRouter = require('./src/routes/products.routes.js');
 const cartRouter = require('./src/routes/carts.routes.js');
@@ -15,10 +16,9 @@ const indexRouter = require('./src/routes/index.routes.js');
 
 
 
-
+dotenv.config();
 const app = express();
-const DBPATH = "mongodb+srv://lokitan74138:1LGCC9ryZkanEJ1J@cluster0.cstf4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-
+const DBPATH = process.env.URL_MONGO;
 
 ////Settings
 app.set('port', process.env.PORT || 8080);
@@ -51,6 +51,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 ///rutas
+app.use('/public', express.static(path.join(__dirname, 'public')));//concateno rutas
 app.use('/', indexRouter);
 
 
