@@ -20,30 +20,41 @@ const cookieExtractor = (req) => {
 
 const initalizatePassport = () => {
 
-    passport.use('register', new localStrategy({ passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
-
-        try {
-            const { first_name, last_name, email, age, password } = req.body
-            const findUser = await userModel.findOne({ email: email })
-
-            if (!findUser) {
-                const user = await userModel.create({
-                    first_name,
-                    last_name,
-                    email,
-                    age,
-                    password: createHashPassword(password)
-                })
-                return done(null, user)
-            } else {
-                return done(null, false, { message: "Usuario ya registrado" })
+    passport.use('register', new localStrategy(
+        { passReqToCallback: true, usernameField: 'email' },
+        async (req, username, password, done) => {
+            try {
+                const { first_name, last_name, email, age } = req.body;
+                console.log("🟢 Recibiendo datos de registro:", { first_name, last_name, email, age, password });
+    
+                const findUser = await userModel.findOne({ email: username });
+                console.log("🔍 Buscando usuario en la base de datos:", findUser);
+    
+                if (!findUser) {
+                    const hashedPassword = createHashPassword(password);
+                    console.log("🔑 Contraseña hasheada:", hashedPassword);
+    
+                    const user = await userModel.create({
+                        first_name,
+                        last_name,
+                        email,
+                        age,
+                        password: hashedPassword
+                    });
+    
+                    console.log("✅ Usuario creado correctamente:", user);
+                    return done(null, user);
+                } else {
+                    console.log("❌ Usuario ya existe.");
+                    return done(null, false, { message: "Usuario ya registrado" });
+                }
+            } catch (error) {
+                console.error("🚨 Error en registro:", error);
+                return done(error);
             }
-        } catch (error) {
-            return done(error)
         }
-
-    }));
-
+    ));
+    
     passport.use('login', new localStrategy({ usernameField: 'email' }, async (username, password, done) => {
         try {
 
@@ -60,6 +71,7 @@ const initalizatePassport = () => {
             return done(null, user)
             
         } catch (error) {
+            return done(error)  
             
         }
 
@@ -104,7 +116,7 @@ const initalizatePassport = () => {
 
     }, async (jwt_payload, done) => {
         try {
-            return done(null, jwt_payload)
+            return done(null, jwt_payload.user)
         } catch (e) {
             return done(e)
             
