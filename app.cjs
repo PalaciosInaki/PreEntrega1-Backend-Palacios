@@ -11,6 +11,8 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const initalizatePassport = require('./src/config/passport.config.cjs');
+const indexRouter = require('./src/routes/index.routes.js');
+
 
 
 
@@ -47,12 +49,9 @@ app.use(session({
 
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/public', express.static(path.join(__dirname, 'public')));//concateno rutas
 
-
-app.use('/products', productRouter);
-app.use('/carts', cartRouter)
-app.use('/sessions', sessionRouter);
+///rutas
+app.use('/', indexRouter);
 
 
 
