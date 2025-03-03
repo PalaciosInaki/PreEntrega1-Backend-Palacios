@@ -85,7 +85,7 @@ const initalizatePassport = () => {
 
     passport.use('github', new GithubStrategy({
         clientID: "Ov23liNYZK3iJlb87laf",
-        clientSecret: "838875aab34663b912aec613b589adeb9cfd8e0c",
+        clientSecret: process.env.SECRET_GITHUB,
         callbackURL: "http://localhost:8080/sessions/github/callback"
         
     }, async (accessToken, refreshToken, profile, done) => {
@@ -114,7 +114,7 @@ const initalizatePassport = () => {
 
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: 'jwtSecret'
+        secretOrKey: process.env.SECRET_JWT
 
     }, async (jwt_payload, done) => {
         try {
