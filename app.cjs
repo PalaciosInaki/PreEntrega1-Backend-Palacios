@@ -34,10 +34,10 @@ app.set('view engine', '.hbs');
 
 ////Middlewares
 app.use(express.json());
-app.use(cookieParser("cookieSecret"));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
     store: MongoStore.create({ mongoUrl: DBPATH , ttl: 60 * 60 * 24 } ),
-    secret: 'sessionSecret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false, 
     cookie: {

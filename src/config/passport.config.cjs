@@ -1,3 +1,5 @@
+const dotenv = require('dotenv');
+
 const passport = require('passport');
 const local = require('passport-local').Strategy;
 const GithubStrategy = require('passport-github2').Strategy;
@@ -5,7 +7,7 @@ const { comparePassword, createHashPassword } = require('../utils/bcrypt.cjs');
 const userModel = require('../models/user.model.cjs');
 const jwt = require('passport-jwt');
 
-
+dotenv.config();
 const localStrategy = local.Strategy
 const JWTStrategy = jwt.Strategy
 const ExtractJWT = jwt.ExtractJwt
