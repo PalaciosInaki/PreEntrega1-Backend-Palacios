@@ -11,6 +11,6 @@ cartRouter.post('/', authorization('user'), CartController.createCart);
 
 cartRouter.get('/:id', CartController.getCartById);
 
-cartRouter.post('/add', authorization('user'), CartController.addToCart);
+cartRouter.post('/add', CartController.addToCart);
 
 module.exports = cartRouter;
