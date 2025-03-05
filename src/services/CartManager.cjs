@@ -27,30 +27,48 @@ class CartManager {
         }
     }
 
-    async addProductToCart(productId) {
+    async addProductToCart(req, productId) {
         try {
-            let cart = await cartModel.findOne();
-            if (!cart) {
-                //si no existe un carrito lo crea
-                cart = new cartModel({ products: [] });
+            // ⚠️ Verificar que el usuario está autenticado
+            if (!req.user) {
+                throw new Error("Usuario no autenticado.");
             }
-
-            const existingProduct = cart.products.find((p) => p.product.toString() === productId);
-
+    
+            // ⚠️ Verificar que el usuario tiene un carrito asignado
+            if (!req.user.cart) {
+                throw new Error("El usuario no tiene un carrito asignado.");
+            }
+    
+            // Buscar el carrito del usuario logueado
+            let cart = await cartModel.findById(req.user.cart);
+    
+            // Si no encuentra el carrito, lo crea
+            if (!cart) {
+                cart = new cartModel({ products: [] });
+                await cart.save();
+    
+                // Asignar el carrito al usuario y guardar el usuario en la BD
+                req.user.cart = cart._id;
+                await req.user.save();
+            }
+    
+            const existingProduct = cart.products.find((p) => p.id_product.toString() === productId);
+    
             if (existingProduct) {
-                //si el producto ya esta incrementa la cantidad
                 existingProduct.quantity += 1;
             } else {
-                //si no lo agrega
-                cart.products.push({ product: productId });
+                cart.products.push({ id_product: productId, quantity: 1 });
             }
-
+    
             await cart.save();
             return cart;
         } catch (error) {
-            throw new Error(`Error adding product to cart: ${error.message}`);
+            throw new Error(`Error agregando producto al carrito: ${error.message}`);
         }
     }
+    
+    
+    
 }
 
 module.exports = new CartManager();
