@@ -52,7 +52,7 @@ const addToCart = async (req, res) => {
             return res.status(400).send("Falta el ID del producto");
         }
 
-        const cart = await CartManager.addProductToCart(productId);
+        const cart = await CartManager.addProductToCart(req, productId);;
         console.log("🛒 Carrito actualizado:", cart);
 
         if (!cart) {

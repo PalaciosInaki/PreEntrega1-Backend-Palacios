@@ -28,14 +28,14 @@ const initalizatePassport = () => {
             try {
                 const { first_name, last_name, email, age } = req.body;
                 console.log("🟢 Recibiendo datos de registro:", { first_name, last_name, email, age, password });
-    
+
                 const findUser = await userModel.findOne({ email: username });
                 console.log("🔍 Buscando usuario en la base de datos:", findUser);
-    
+
                 if (!findUser) {
                     const hashedPassword = createHashPassword(password);
                     console.log("🔑 Contraseña hasheada:", hashedPassword);
-    
+
                     const user = await userModel.create({
                         first_name,
                         last_name,
@@ -43,7 +43,7 @@ const initalizatePassport = () => {
                         age,
                         password: hashedPassword
                     });
-    
+
                     console.log("✅ Usuario creado correctamente:", user);
                     return done(null, user);
                 } else {
@@ -56,7 +56,7 @@ const initalizatePassport = () => {
             }
         }
     ));
-    
+
     passport.use('login', new localStrategy({ usernameField: 'email' }, async (username, password, done) => {
         try {
 
@@ -71,14 +71,14 @@ const initalizatePassport = () => {
             }
 
             return done(null, user)
-            
+
         } catch (error) {
-            return done(error)  
-            
+            return done(error)
+
         }
 
-  
-        
+
+
 
     }));
 
@@ -87,7 +87,7 @@ const initalizatePassport = () => {
         clientID: "Ov23liNYZK3iJlb87laf",
         clientSecret: process.env.SECRET_GITHUB,
         callbackURL: "http://localhost:8080/sessions/github/callback"
-        
+
     }, async (accessToken, refreshToken, profile, done) => {
         try {
             const email = profile._json.email || `${profile.username}@github.com`;/////Git hub no proporciona el email, cambie configuraciones y di permisos pero no
@@ -96,7 +96,7 @@ const initalizatePassport = () => {
                 console.log(profile)
                 const newUser = await userModel.create({
                     first_name: profile._json.name,
-                    last_name : " ", //dato no proporcionado por git
+                    last_name: " ", //dato no proporcionado por git
                     email: email,
                     password: '12345', //dato no proporcionado por git, se genera por defecto
                     age: 18 //Dato no proporcionado por git
@@ -115,16 +115,16 @@ const initalizatePassport = () => {
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
         secretOrKey: process.env.SECRET_JWT
-
     }, async (jwt_payload, done) => {
+        console.log("🔍 Payload recibido en JWT:", jwt_payload);
         try {
-            return done(null, jwt_payload.user)
+            return done(null, jwt_payload.user);
         } catch (e) {
-            return done(e)
-            
+            return done(e);
         }
-    }))
-       
+    }));
+
+
 
     /////Pasos necesarios para trabajar via http con passport 
     passport.serializeUser((user, done) => {

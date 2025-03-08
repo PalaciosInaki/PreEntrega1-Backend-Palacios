@@ -30,6 +30,7 @@ class CartManager {
     async addProductToCart(req, productId) {
         try {
             // ⚠️ Verificar que el usuario está autenticado
+            console.log("Usuario autenticado:", req.user);
             if (!req.user) {
                 throw new Error("Usuario no autenticado.");
             }

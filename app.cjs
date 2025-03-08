@@ -1,8 +1,5 @@
 const dotenv = require('dotenv');
 const express = require('express');
-const productRouter = require('./src/routes/products.routes.js');
-const cartRouter = require('./src/routes/carts.routes.js');
-const sessionRouter = require('./src/routes/sessions.routes.js');
 const exphbs = require('express-handlebars');  
 const { Server: SocketServer } = require('socket.io');
 const path = require('path');
@@ -46,8 +43,10 @@ app.use(session({
 
   
 }));
-
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 
 ///rutas
