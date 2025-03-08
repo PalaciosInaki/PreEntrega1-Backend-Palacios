@@ -77,13 +77,13 @@ const checkout = async (req, res) => {
             if (prodStockNull.length === 0) {////finalizo compra si no hay productos sin stock
                 let totalAmount = 0
                 //descuento stock de los productos y calculo total de la compra 
-                cart.products.forEach(async (product) => {
-                    const prod = await productModel.findById(product.productID)
-                    prod.stock -= product.quantity
-                    await prod.save()
-                    totalAmount += product.price * product.quantity
+                for (const product of cart.products) {
+                    const prod = await productModel.findById(product.productID);
+                    prod.stock -= product.quantity;
+                    totalAmount += product.price * product.quantity;
+                    await prod.save();
                 }
-                )
+                
 
                 const newTicket = await ticketModel.create({
                     code: crypto.randomUUID(16),
@@ -121,4 +121,5 @@ module.exports = {
     getCarts,
     getCartById,
     addToCart,
+    checkout
 }
